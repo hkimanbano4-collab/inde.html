@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soyfa Insta Video Downloader</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #fce4ec; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; padding: 20px;}
+        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; width: 100%; max-width: 400px; }
+        h2 { color: #E1306C; margin-bottom: 5px; font-size: 24px;}
+        p { color: #555; font-size: 14px; }
+        input { width: 90%; padding: 12px; margin: 15px 0; border: 1px solid #ddd; border-radius: 8px; outline: none; font-size: 14px;}
+        button { background-color: #E1306C; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; transition: 0.3s;}
+        button:hover { background-color: #C13584; }
+        #result { margin-top: 20px; }
+        
+        /* Video Player ki style */
+        video {
+            width: 100%;
+            border-radius: 10px;
+            margin-top: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Download Button ki style */
+        .download-btn {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            padding: 12px 20px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-top: 15px;
+            width: 85%;
+            transition: background 0.3s;
+        }
+        .download-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <!-- Yahan website ka naya naam daala gaya hai -->
+    <h2>Soyfa Instagram<br>Video Downloader</h2>
+    <p>Reel ya Video ka link niche paste karein</p>
+    
+    <input type="text" id="insta-url" placeholder="Link yahan paste karein...">
+    <button onclick="downloadVideo()">Video Nikalo</button>
+    
+    <div id="result"></div>
+</div>
+
+<script>
+    async function downloadVideo() {
+        const url = document.getElementById('insta-url').value;
+        const resultDiv = document.getElementById('result');
+        
+        if (!url) {
+            resultDiv.innerHTML = "<p style='color:red;'>Pehle link daaliye!</p>";
+            return;
+        }
+
+        resultDiv.innerHTML = "<p>⏳ Video nikal raha hoon... thoda wait karein</p>";
+
+        try {
+            const response = await fetch('http://127.0.0.1:5000/download', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: url })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                try {
+                    let videoUrl = data.data[0].urls[0].url;
+                    
+                    // Yahan humne HTML5 Video Player add kiya hai
+                    resultDiv.innerHTML = `
+                        <p style='color:green; font-weight:bold;'>🎉 Video Mil Gaya!</p>
+                        
+                        <!-- Video Player -->
+                        <video controls>
+                            <source src="${videoUrl}" type="video/mp4">
+                            Aapka browser video play nahi kar sakta.
+                        </video>
+
+                        <!-- Download Button -->
+                        <a href="${videoUrl}" target="_blank" class="download-btn">⬇️ Download Video</a>
+                    `;
+                } catch (err) {
+                    resultDiv.innerHTML = `<p style='color:red;'>Video ka link nahi nikal paya. Shayad private video hai.</p>`;
+                }
+            } else {
+                resultDiv.innerHTML = `<p style='color:red;'>Error: ${data.error}</p>`;
+            }
+        } catch (error) {
+            resultDiv.innerHTML = `<p style='color:red;'>Server on nahi hai. Cmd me python app.py chalu karein.</p>`;
+        }
+    }
+</script>
+
+</body>
+</html>
