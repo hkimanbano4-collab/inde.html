@@ -202,7 +202,7 @@
         }
 
         // Show animated loader
-        resultDiv.innerHTML = `<div class="loader"></div><p style="color:white; font-weight:600;">Extracting magic... ✨</p>`;
+        resultDiv.innerHTML = `<div class="loader"></div><p style="color:white; font-weight:600;">Wait karein, video dhoondh rahe hain... ✨</p>`;
 
         try {
             const response = await fetch('http://127.0.0.1:5000/download', {
@@ -231,13 +231,13 @@
                         </div>
                     `;
                 } catch (err) {
-                    resultDiv.innerHTML = `<p style='color:#ffcccb; font-weight:bold;'>❌ Video nahi nikal paya. (Private video?)</p>`;
+                    resultDiv.innerHTML = `<p style='color:#ffcccb; font-weight:bold;'>❌ Video nahi nikal paya. (Shayad Private video hai)</p>`;
                 }
             } else {
                 resultDiv.innerHTML = `<p style='color:#ffcccb; font-weight:bold;'>❌ Error: ${data.error}</p>`;
             }
         } catch (error) {
-            resultDiv.innerHTML = `<p style='color:#ffcccb; font-weight:bold;'>❌ Server on nahi hai. Cmd check karein.</p>`;
+            resultDiv.innerHTML = `<p style='color:#ffcccb; font-weight:bold;'>❌ Server on nahi hai. Cmd me python app.py chalu karein.</p>`;
         }
     }
 </script>
